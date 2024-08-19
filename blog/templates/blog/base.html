@@ -18,6 +18,18 @@
         </p>
         <h3>Latest posts</h3>
         {% show_latest_posts 3 %}
+
+        <h3>Most Commented</h3>
+        {% get_most_commented_posts 3 as most_commented_posts %}
+        <ul>
+        {% for post in most_commented_posts %}
+        <li>
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </li>
+        {% empty %}
+        <p>No posts yet</p>
+        {% endfor %}
+    </ul>
     </div>
 </body>
 </html>
