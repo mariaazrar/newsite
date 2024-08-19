@@ -33,7 +33,7 @@ SITE_ID = 1
 
 INSTALLED_APPS = [
     'debug_toolbar',
-    'blog.apps.BlogConfig',
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'taggit',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [
@@ -82,11 +83,15 @@ WSGI_APPLICATION = 'newsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blogd',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+# python -Xutf8 manage.py dumpdata --indent=2 --output=mysite_data.json  command to dump data
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
