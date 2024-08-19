@@ -51,7 +51,6 @@ def post_detail(request, year, month, day, post):
     tag_values_ids = post.tags.values_list('id', flat=True) # with flat true we can get id's in a list [1,2,3]
     similar_post_list = Post.published.filter(tags__in=tag_values_ids).exclude(id=post.id)
     similar_post_list = similar_post_list.annotate(similar_post=Count('tags')).order_by('-similar_post','-publish')[:4]
-
     return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_post_list})
 
 
