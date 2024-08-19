@@ -6,6 +6,7 @@ from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
+from django.db.models import Count
 # Create your views here.
 
 class PostListView(ListView):
@@ -41,12 +42,17 @@ def post_detail(request, year, month, day, post):
                              publish__month=month, 
                              publish__day=day, 
                              status=Post.Status.PUBLISHED)
+    
     # List of active comments for this post
     comments = post.comments.filter(active=True)
     # Form for users to comment
     form = CommentForm()
+    # get all the tags related to the post
+    tag_values_ids = post.tags.values_list('id', flat=True) # with flat true we can get id's in a list [1,2,3]
+    similar_post_list = Post.published.filter(tags__in=tag_values_ids).exclude(id=post.id)
+    similar_post_list = similar_post_list.annotate(similar_post=Count('tags')).order_by('-similar_post','-publish')[:4]
 
-    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form})
+    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_post_list})
 
 
 def share_post(request, post_id):
